@@ -1,4 +1,5 @@
 import Entity from "./entity";
+import Rectangle from "./rect";
 
 export default class Block extends Entity {
     private posX: number;
@@ -22,5 +23,9 @@ export default class Block extends Entity {
         ctx.fillStyle = this.blockColor;
         ctx.fill();
         ctx.closePath();
+    }
+
+    getBoundingBox(): Rectangle {
+        return new Rectangle(this.posX, this.posY, this.blockLength, this.blockLength)
     }
 }

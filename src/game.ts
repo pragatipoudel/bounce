@@ -20,9 +20,8 @@ export default class Game {
         for (let i = 0; i < numberOfBlocks; i++) {
             const block = new Block(i * 16, this.canvas.height - 16);
             this.entities.push(block);
-
         }
-
+        player.setEntities(this.entities);
     }
 
     update() {
@@ -38,11 +37,16 @@ export default class Game {
         }
     }
 
+    nextFrame() {
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => {
+            this.nextFrame();
+        });
+    }
+
     start() {
         this.init();
-        requestAnimationFrame(()=> {
-            this.update();
-            this.draw();
-        });
+        this.nextFrame();
     }
 }
