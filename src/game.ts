@@ -21,6 +21,16 @@ export default class Game {
             const block = new Block(i * 16, this.canvas.height - 16);
             this.entities.push(block);
         }
+
+        const numberOfVerticalBlocks = this.canvas.height - 16 / 16;
+        for (let i = 0; i < numberOfVerticalBlocks; i++) {
+            const block2 =  new Block(0, 16 * i);
+            const block3 = new Block(this.canvas.width - 16, 16 * i)
+            this.entities.push(block2, block3);
+
+        }
+
+    
         player.setEntities(this.entities);
     }
 
