@@ -76,40 +76,32 @@ export default class Player extends Entity {
     private checkCollision(direction: string) {
         let myBox = this.getBoundingBox();
 
-        for (let i = 0; i < this.entities.length; i++) {
-            const entity = this.entities[i];
-            if (entity == this) {
-                continue;
-            }
+        this.entities
+            .filter(entity => entity != this)
+            .forEach(entity =>{
+                const otherBox = entity.getBoundingBox();
+                const [offsetX, offsetY] = myBox.getOffset(otherBox);
+                if (offsetX !== 0 && offsetY !== 0) {
+                    if (direction === "y") {
+                        this.posY += offsetY;
+                        this.vy = 0;
+                    } else {
+                        this.posX += offsetX;
+                        this.vx = 0;
+                    }
 
-            const otherBox = entity.getBoundingBox();
-            const [offsetX, offsetY] = myBox.getOffset(otherBox);
-            if (offsetX !== 0 && offsetY !== 0) {
-                if (direction === "y") {
-                    this.posY += offsetY;
-                    this.vy = 0;
-                } else {
-                    this.posX += offsetX;
-                    this.vx = 0;
+                    myBox = this.getBoundingBox();
                 }
+            })
 
-                myBox = this.getBoundingBox();
-            }
-        }
 
-        this.onGround = false;
-        for (let i = 0; i < this.entities.length; i++) {
-            const entity = this.entities[i];
-            if (entity == this) {
-                continue;
-            }
-
-            const otherBox = entity.getBoundingBox();
         
-            if (myBox.isOnTop(otherBox)) {
-                this.onGround = true;
-            }
-        }
+        this.onGround = this.entities
+                            .filter(entity => entity != this)
+                            .some (entity => {
+                                const otherBox = entity.getBoundingBox();
+                                return myBox.isOnTop(otherBox);
+                            })
 
 
     }
